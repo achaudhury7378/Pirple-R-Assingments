@@ -1,0 +1,16 @@
+df<-read.csv('death-rates-from-air-pollution.csv')
+detail<-function(country){
+  print(country)
+  temp<-df[df$Entity==country,]
+  mn<-min(temp$Air.pollution..total...deaths.per.100.000.,na.rm=T)
+  mx<-max(temp$Air.pollution..total...deaths.per.100.000.,na.rm=T)
+  avg<-mean(temp$Air.pollution..total...deaths.per.100.000.,na.rm=T)
+  s<-sd(temp$Air.pollution..total...deaths.per.100.000.,na.rm=T)
+  cv<-cov(x=temp$Indoor.air.pollution..deaths.per.100.000.,y=temp$Outdoor.particulate.matter..deaths.per.100.000.)
+  out<-data.frame(country=country,min=mn,max=mx,average=avg,std_deviation=s,covariance=cv)
+  return(out)
+}
+lst<-as.list(unique(df$Entity))
+results<-lapply(X=lst,FUN=detail)
+rs<-do.call(rbind,results)
+write.csv(rs,"homework#7.csv")
